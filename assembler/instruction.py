@@ -24,12 +24,12 @@ class Instruction:
             (OperandType.REGISTER, 0xF, 4, (0, 15)),
             (OperandType.IMMEDIATE, 0x3F, 8, (-0x20, 0x1F))
         ],
-        'RI10': [
+        'RI11': [
             (OperandType.REGISTER, 0xF, 0, (0, 15)),
-            (OperandType.IMMEDIATE, 0x3FF, 4, (-0x200, 0x1FF))
+            (OperandType.IMMEDIATE, 0x7FF, 4, (-0x400, 0x3FF))
         ],
-        'I15': [
-            (OperandType.IMMEDIATE, 0x7FFF, 0, (-0x4000, 0x3FFF))
+        'I12': [
+            (OperandType.IMMEDIATE, 0xFFF, 0, (-0x800, 0x7FF))
         ]
     }
 
@@ -67,16 +67,16 @@ class Instruction:
             'args': arguments['RRI6']
         },
         'LD': {
-            'opCode': (OperandType.OPCODE, 0x8, 14),
-            'args': arguments['RI10']
+            'opCode': (OperandType.OPCODE, 0x4, 15),
+            'args': arguments['RI11']
         },
         'ST': {
-            'opCode': (OperandType.OPCODE, 0x9, 14),
-            'args': arguments['RI10']
+            'opCode': (OperandType.OPCODE, 0x5, 15),
+            'args': arguments['RI11']
         },
         'JUMP': {
-            'opCode': (OperandType.OPCODE, 0x6, 15),
-            'args': arguments['I15']
+            'opCode': (OperandType.OPCODE, 0x3F, 12),
+            'args': arguments['I12']
         },
         'BEQ': {
             'opCode': (OperandType.OPCODE, 0x3A, 12),
