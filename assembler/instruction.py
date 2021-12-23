@@ -145,7 +145,9 @@ class Instruction:
         if arg[0] == OperandType.IMMEDIATE and num[0] == 'R':
             raise SyntaxError(f'Expected immediate, got register instead!\nLine: "{self.line}" ({num})')
 
-        number = int(num[1:]) if arg[0] == OperandType.REGISTER else int(num)
+        num = num[1:] if arg[0] == OperandType.REGISTER else num
+
+        number = self.strParse(num)
 
         lowerLimit, upperLimit = arg[3]
 
@@ -153,6 +155,21 @@ class Instruction:
             raise OverflowError(f'Overflow error!\nLine: "{self.line}" [{lowerLimit}, {upperLimit}]')
 
         return number
+
+    def strParse(self, num: str) -> int:
+        
+        try:
+            if (re.match('-?0b\d+', num)):
+                return int(num, 2)
+            elif (re.match('-?0o\d+', num)):
+                return int(num, 8)
+            elif (re.match('-?0x\d+', num)):
+                return int(num, 16)
+            else:
+                return int(num)
+        except ValueError:
+            raise ValueError(f'Illegal number format! ({num})')
+
 
     def getHex(self) -> int:
         return self.hexCode

@@ -7,7 +7,7 @@ class Assembler:
         fileContent = self.openFile(filePath)
         
         instructions = filter(None, fileContent.split('\n'))
-        reObj = re.compile('^\\s*(\\w+)\\s+([Rr-]?\\d+)(?:\\s*,\\s*([Rr-]?\\d+))?(?:\\s*,\\s*([Rr-]?\\d+))?$')
+        reObj = re.compile('^\\s*(\\w+)\\s+([Rr-]?[0-9box]+)(?:\\s*,\\s*([Rr-]?[0-9box]+))?(?:\\s*,\\s*([Rr-]?[0-9box]+))?\\s*$')
 
         self.hexCodes = []
 
