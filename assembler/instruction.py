@@ -120,7 +120,7 @@ class Instruction:
             opCode = inst['opCode']
             args = inst['args']
         except KeyError:
-            raise KeyError(f'Instruction is not found! ({line})')
+            raise KeyError(f'Instruction is not found!\nLine: "{line}" ({parsedLine[0]})')
 
         self.hexCode = opCode[1] << opCode[2]
         self.argParser(parsedLine[1:], args)
@@ -168,8 +168,7 @@ class Instruction:
             else:
                 return int(num)
         except ValueError:
-            raise ValueError(f'Illegal number format! ({num})')
-
+            raise ValueError(f'Illegal number format!\nLine: "{self.line}" ({num})')
 
     def getHex(self) -> int:
         return self.hexCode
