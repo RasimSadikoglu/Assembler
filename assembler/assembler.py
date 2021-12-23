@@ -12,7 +12,7 @@ class Assembler:
         self.hexCodes = []
 
         for ins in instructions:
-            self.hexCodes.append(Instruction(ins, reObj).getHex())
+            self.hexCodes.append(Instruction(ins, reObj).hexCode)
         
         self.writeFile(filePath.rsplit('.', maxsplit=1)[0] + '.hex')
 

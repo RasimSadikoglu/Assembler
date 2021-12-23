@@ -159,16 +159,13 @@ class Instruction:
     def strParse(self, num: str) -> int:
         
         try:
-            if (re.match('-?0b\d+', num)):
+            if (re.match('-?0?b\d+', num)):
                 return int(num, 2)
-            elif (re.match('-?0o\d+', num)):
+            elif (re.match('-?0?o\d+', num)):
                 return int(num, 8)
-            elif (re.match('-?0x\d+', num)):
+            elif (re.match('-?0?x\d+', num)):
                 return int(num, 16)
             else:
                 return int(num)
         except ValueError:
             raise ValueError(f'Illegal number format!\nLine: "{self.line}" ({num})')
-
-    def getHex(self) -> int:
-        return self.hexCode
