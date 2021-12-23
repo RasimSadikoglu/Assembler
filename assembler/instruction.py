@@ -17,7 +17,7 @@ class Instruction:
         'RRI4': [
             (OperandType.REGISTER, 0xF, 0, (0, 15)),
             (OperandType.REGISTER, 0xF, 4, (0, 15)),
-            (OperandType.IMMEDIATE, 0xF, 8, -8, 7)
+            (OperandType.IMMEDIATE, 0xF, 8, (-8, 7))
         ],
         'RRI6': [
             (OperandType.REGISTER, 0xF, 0, (0, 15)),
@@ -100,15 +100,16 @@ class Instruction:
         }
     }
 
-    def __init__(self, line: str, reObj: Pattern[str]):
+    def __init__(self, line: str, lineNumber: int, reObj: Pattern[str]):
         self.line = line
+        self.lineNumber = lineNumber
         self.hexCode = 0
         self.reObj = reObj
 
         parsedLine = re.findall(self.reObj, self.line)
 
         if len(parsedLine) != 1:
-            raise SyntaxError(f'Instruction format is wrong! ({line})')
+            raise SyntaxError(f'Instruction format is wrong!\nLine {self.lineNumber}: "{line}"')
 
         parsedLine = tuple(filter(None, parsedLine[0]))
 
@@ -120,7 +121,7 @@ class Instruction:
             opCode = inst['opCode']
             args = inst['args']
         except KeyError:
-            raise KeyError(f'Instruction is not found!\nLine: "{line}" ({parsedLine[0]})')
+            raise SyntaxError(f'Instruction is not found!\nLine {self.lineNumber}: "{line}" ({parsedLine[0]})')
 
         self.hexCode = opCode[1] << opCode[2]
         self.argParser(parsedLine[1:], args)
@@ -128,7 +129,7 @@ class Instruction:
     def argParser(self, input: str, args: tuple):
 
         if len(input) != len(args):
-            raise SyntaxError(f'Arguments length does not match! ({self.line})')
+            raise SyntaxError(f'Arguments length does not match!\nLine {self.lineNumber}: ({self.line})')
         
         for inp, arg in zip(input, args):
 
@@ -137,35 +138,35 @@ class Instruction:
             self.hexCode += (number & arg[1]) << arg[2]
 
     def parseNumber(self, num: str, arg: tuple) -> int:
-        number = -1
+        number = ''
 
         if arg[0] == OperandType.REGISTER and num[0] != 'R':
-            raise SyntaxError(f'Expected register, got immediate instead!\nLine: "{self.line}" ({num})')
+            raise SyntaxError(f'Expected register, got immediate instead!\nLine {self.lineNumber}: "{self.line}" ({num})')
 
         if arg[0] == OperandType.IMMEDIATE and num[0] == 'R':
-            raise SyntaxError(f'Expected immediate, got register instead!\nLine: "{self.line}" ({num})')
+            raise SyntaxError(f'Expected immediate, got register instead!\nLine {self.lineNumber}: "{self.line}" ({num})')
 
-        num = num[1:] if arg[0] == OperandType.REGISTER else num
+        number = num[1:] if arg[0] == OperandType.REGISTER else num
 
-        number = self.strParse(num)
+        number = self.strParse(number)
 
         lowerLimit, upperLimit = arg[3]
 
         if number < lowerLimit or number > upperLimit:
-            raise OverflowError(f'Overflow error!\nLine: "{self.line}" [{lowerLimit}, {upperLimit}]')
+            raise OverflowError(f'Overflow error!\nLine {self.lineNumber}: "{self.line}" ({num}) [{lowerLimit}, {upperLimit}]')
 
         return number
 
     def strParse(self, num: str) -> int:
         
         try:
-            if (re.match('-?0?b\d+', num)):
+            if (re.match('-?0b\\d+', num) != None):
                 return int(num, 2)
-            elif (re.match('-?0?o\d+', num)):
+            elif (re.match('-?0o\\d+', num) != None):
                 return int(num, 8)
-            elif (re.match('-?0?x\d+', num)):
+            elif (re.match('-?0x\\d+', num) != None):
                 return int(num, 16)
             else:
                 return int(num)
         except ValueError:
-            raise ValueError(f'Illegal number format!\nLine: "{self.line}" ({num})')
+            raise ValueError(f'Illegal number format!\nLine {self.lineNumber}: "{self.line}" ({num})')

@@ -6,13 +6,16 @@ class Assembler:
     def __init__(self, filePath: str):
         fileContent = self.openFile(filePath)
         
-        instructions = filter(None, fileContent.split('\n'))
+        instructions = fileContent.split('\n')
         reObj = re.compile('^\\s*(\\w+)\\s+([Rr-]?[0-9box]+)(?:\\s*,\\s*([Rr-]?[0-9box]+))?(?:\\s*,\\s*([Rr-]?[0-9box]+))?\\s*$')
 
         self.hexCodes = []
 
-        for ins in instructions:
-            self.hexCodes.append(Instruction(ins, reObj).hexCode)
+        for ins, lineNumber in zip(instructions, range(1, len(instructions) + 1)):
+            if (re.match('^\s*$', ins)):
+                continue
+
+            self.hexCodes.append(Instruction(ins, lineNumber, reObj).hexCode)
         
         self.writeFile(filePath.rsplit('.', maxsplit=1)[0] + '.hex')
 
