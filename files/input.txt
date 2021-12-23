@@ -3,7 +3,7 @@
 ADDI R3, R1,  -12
   
 
-   LD R0o5, -0o14
+   LD 0o5, -0o14
      JUMP -0x3
   St R6, 0b1010  
    

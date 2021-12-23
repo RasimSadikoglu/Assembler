@@ -153,20 +153,20 @@ class Instruction:
         lowerLimit, upperLimit = arg[3]
 
         if number < lowerLimit or number > upperLimit:
-            raise OverflowError(f'Overflow error!\nLine {self.lineNumber}: "{self.line}" ({num}) [{lowerLimit}, {upperLimit}]')
+            raise OverflowError(f'Overflow error!\nLine {self.lineNumber}: "{self.line}" ("{num}" = {number}) [{lowerLimit}, {upperLimit}]')
 
         return number
 
-    def strParse(self, num: str) -> int:
+    def strParse(self, number: str) -> int:
         
         try:
-            if (re.match('-?0b\\d+', num) != None):
-                return int(num, 2)
-            elif (re.match('-?0o\\d+', num) != None):
-                return int(num, 8)
-            elif (re.match('-?0x\\d+', num) != None):
-                return int(num, 16)
+            if (re.match('-?0b[01]+', number) != None):
+                return int(number, 2)
+            elif (re.match('-?0o[0-7]+', number) != None):
+                return int(number, 8)
+            elif (re.match('-?0x[0-9a-fA-F]+', number) != None):
+                return int(number, 16)
             else:
-                return int(num)
+                return int(number)
         except ValueError:
-            raise ValueError(f'Illegal number format!\nLine {self.lineNumber}: "{self.line}" ({num})')
+            raise ValueError(f'Illegal number format!\nLine {self.lineNumber}: "{self.line}" ({number})')

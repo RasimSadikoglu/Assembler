@@ -7,7 +7,7 @@ class Assembler:
         fileContent = self.openFile(filePath)
         
         instructions = fileContent.split('\n')
-        reObj = re.compile('^\\s*(\\w+)\\s+([Rr-]?[0-9box]+)(?:\\s*,\\s*([Rr-]?[0-9box]+))?(?:\\s*,\\s*([Rr-]?[0-9box]+))?\\s*$')
+        reObj = re.compile('^\\s*(\\w+)\\s+([Rr-]?[0-9a-fA-Fbox]+)(?:\\s*,\\s*([Rr-]?[0-9a-fA-Fbox]+))?(?:\\s*,\\s*([Rr-]?[0-9a-fA-Fbox]+))?\\s*$')
 
         self.hexCodes = []
 
@@ -23,18 +23,17 @@ class Assembler:
         try:
             with open(filePath, 'r') as input:
                 return input.read()
-        except:
-            print(f'File does not found! ({filePath})')
-            exit(1)
+        except FileNotFoundError:
+            raise FileNotFoundError(f'File is not found! ({filePath})')
 
     def writeFile(self, filePath):
         try:
             with open(filePath, 'w') as output:
                 for hexI in self.hexCodes:
-                    output.write(f':{hex(hexI)[2:].upper()}\n')
-        except:
-            print(f'Error while writing to the file! ({filePath})')
-            exit(1)
+                    hexString = hex(hexI)[2:].upper()
+                    output.write(f':{"0" * (5 - len(hexString)) + hexString}\n')
+        except FileNotFoundError:
+            raise FileNotFoundError(f'Error while writing to the file! ({filePath})')
 
 if __name__ == '__main__':
     
