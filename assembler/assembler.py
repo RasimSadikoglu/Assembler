@@ -7,11 +7,15 @@ class Assembler:
         fileContent = self.openFile(filePath)
         
         instructions = fileContent.split('\n')
+
+        # Regex pattern for spliting line.
         reObj = re.compile('^\\s*(\\w+)\\s+([Rr-]?[0-9a-fA-Fbox]+)(?:\\s*,\\s*([Rr-]?[0-9a-fA-Fbox]+))?(?:\\s*,\\s*([Rr-]?[0-9a-fA-Fbox]+))?\\s*$')
 
         self.hexCodes = []
 
         for ins, lineNumber in zip(instructions, range(1, len(instructions) + 1)):
+
+            # Skip empty lines
             if (re.match('^\s*$', ins)):
                 continue
 
@@ -29,9 +33,13 @@ class Assembler:
     def writeFile(self, filePath):
         try:
             with open(filePath, 'w') as output:
+                output.write('v2.0 raw\n')
+
                 for hexI in self.hexCodes:
                     hexString = hex(hexI)[2:].upper()
-                    output.write(f':{"0" * (5 - len(hexString)) + hexString}\n')
+
+                    # Zero pad hex in order to produce a string with length 5.
+                    output.write(f'{"0" * (5 - len(hexString)) + hexString}\n')
         except FileNotFoundError:
             raise FileNotFoundError(f'Error while writing to the file! ({filePath})')
 

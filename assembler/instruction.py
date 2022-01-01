@@ -26,7 +26,7 @@ class Instruction:
         ],
         'RI11': [
             (OperandType.REGISTER, 0xF, 0, (0, 15)),
-            (OperandType.IMMEDIATE, 0x7FF, 4, (-0x400, 0x3FF))
+            (OperandType.IMMEDIATE, 0x7FF, 4, (0, 0x7FF))
         ],
         'I12': [
             (OperandType.IMMEDIATE, 0xFFF, 0, (-0x800, 0x7FF))
@@ -108,9 +108,11 @@ class Instruction:
 
         parsedLine = re.findall(self.reObj, self.line)
 
+        # If regex result is empty throw error.
         if len(parsedLine) != 1:
             raise SyntaxError(f'Instruction format is wrong!\nLine {self.lineNumber}: "{line}"')
 
+        # Remove empty matches.
         parsedLine = tuple(filter(None, parsedLine[0]))
 
         opCode = ()
@@ -128,9 +130,11 @@ class Instruction:
     
     def argParser(self, input: str, args: tuple):
 
+        # Check parameter count.
         if len(input) != len(args):
             raise SyntaxError(f'Arguments length does not match!\nLine {self.lineNumber}: ({self.line})')
         
+        # Loop over parameters.
         for inp, arg in zip(input, args):
 
             number = self.parseNumber(inp, arg)
@@ -140,18 +144,21 @@ class Instruction:
     def parseNumber(self, num: str, arg: tuple) -> int:
         number = ''
 
+        # Check if parameter is wanted type.
         if arg[0] == OperandType.REGISTER and num[0] != 'R':
             raise SyntaxError(f'Expected register, got immediate instead!\nLine {self.lineNumber}: "{self.line}" ({num})')
 
         if arg[0] == OperandType.IMMEDIATE and num[0] == 'R':
             raise SyntaxError(f'Expected immediate, got register instead!\nLine {self.lineNumber}: "{self.line}" ({num})')
 
+        # Remove R from registers.
         number = num[1:] if arg[0] == OperandType.REGISTER else num
 
         number = self.strParse(number)
 
         lowerLimit, upperLimit = arg[3]
 
+        # Check for overflow if there is, throw
         if number < lowerLimit or number > upperLimit:
             raise OverflowError(f'Overflow error!\nLine {self.lineNumber}: "{self.line}" ("{num}" = {number}) [{lowerLimit}, {upperLimit}]')
 
