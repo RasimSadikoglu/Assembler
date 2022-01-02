@@ -14,10 +14,10 @@ class Instruction:
             (OperandType.REGISTER, 0xF, 4, (0, 15)),
             (OperandType.REGISTER, 0xF, 8, (0, 15))
         ],
-        'RRI4': [
-            (OperandType.REGISTER, 0xF, 0, (0, 15)),
+        'I4RR': [
+            (OperandType.IMMEDIATE, 0xF, 0, (-8, 7)),
             (OperandType.REGISTER, 0xF, 4, (0, 15)),
-            (OperandType.IMMEDIATE, 0xF, 8, (-8, 7))
+            (OperandType.REGISTER, 0xF, 8, (0, 15))
         ],
         'RRI6': [
             (OperandType.REGISTER, 0xF, 0, (0, 15)),
@@ -80,23 +80,23 @@ class Instruction:
         },
         'BEQ': {
             'opCode': (OperandType.OPCODE, 0x3A, 12),
-            'args': arguments['RRI4']
+            'args': arguments['I4RR']
         },
         'BGT': {
             'opCode': (OperandType.OPCODE, 0x39, 12),
-            'args': arguments['RRI4']
+            'args': arguments['I4RR']
         },
         'BLT': {
             'opCode': (OperandType.OPCODE, 0x3C, 12),
-            'args': arguments['RRI4']
+            'args': arguments['I4RR']
         },
         'BGE': {
             'opCode': (OperandType.OPCODE, 0x3B, 12),
-            'args': arguments['RRI4']
+            'args': arguments['I4RR']
         },
         'BLE': {
             'opCode': (OperandType.OPCODE, 0x3E, 12),
-            'args': arguments['RRI4']
+            'args': arguments['I4RR']
         }
     }
 
