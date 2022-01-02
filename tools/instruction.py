@@ -14,10 +14,10 @@ class Instruction:
             (OperandType.REGISTER, 0xF, 4, (0, 15)),
             (OperandType.REGISTER, 0xF, 8, (0, 15))
         ],
-        'I4RR': [
-            (OperandType.IMMEDIATE, 0xF, 0, (-8, 7)),
+        'RRI4': [
             (OperandType.REGISTER, 0xF, 4, (0, 15)),
-            (OperandType.REGISTER, 0xF, 8, (0, 15))
+            (OperandType.REGISTER, 0xF, 8, (0, 15)),
+            (OperandType.IMMEDIATE, 0xF, 0, (-8, 7))
         ],
         'RRI6': [
             (OperandType.REGISTER, 0xF, 0, (0, 15)),
