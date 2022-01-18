@@ -80,23 +80,23 @@ class Instruction:
         },
         'BEQ': {
             'opCode': (OperandType.OPCODE, 0x3A, 12),
-            'args': arguments['I4RR']
+            'args': arguments['RRI4']
         },
         'BGT': {
             'opCode': (OperandType.OPCODE, 0x39, 12),
-            'args': arguments['I4RR']
+            'args': arguments['RRI4']
         },
         'BLT': {
             'opCode': (OperandType.OPCODE, 0x3C, 12),
-            'args': arguments['I4RR']
+            'args': arguments['RRI4']
         },
         'BGE': {
             'opCode': (OperandType.OPCODE, 0x3B, 12),
-            'args': arguments['I4RR']
+            'args': arguments['RRI4']
         },
         'BLE': {
             'opCode': (OperandType.OPCODE, 0x3E, 12),
-            'args': arguments['I4RR']
+            'args': arguments['RRI4']
         }
     }
 
